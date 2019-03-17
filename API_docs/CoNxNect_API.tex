@@ -1,0 +1,155 @@
+\documentclass[a4paper,11pt]{article}
+%\binoppenalty=9999%10000%9999
+%\relpenalty=9999%10000%9999
+%\interfootnotelinepenalty=9999
+
+%\usepackage{showframe}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{mathtools}
+\usepackage{hyperref}
+%\usepackage{showlabels}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[nottoc, notlot, notlof]{tocbibind}
+\usepackage[longnamesfirst]{natbib}
+\usepackage{pdfpages}
+\usepackage{makecell}
+%\usepackage{graphicx}
+
+%\setcitestyle{authoryear, open={(},close={)}}
+
+
+%My Macros
+%custom commands
+\newcommand{\sinc}{\mathrm{sinc}}
+\newcommand{\supp}{\mathrm{supp}}
+\newcommand{\st}{\mathrm{st}}
+\newcommand{\conv}{\mathrm{conv}}
+\newcommand{\dist}{\mathrm{dist}}
+\newcommand{\INT}{\mathrm{int}}
+\newcommand{\x}{\times}
+\newcommand{\p}{\partial}
+\newcommand{\cl}{\mathrm{Cl}}
+\newcommand{\C}{\mathrm{C}}
+\newcommand{\id}{\mathrm{id}}
+\renewcommand{\d}{\mathrm{d}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\essup}{\mathrm{ess\,sup}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\irm}{\mathrm{i}}
+\newcommand{\D}{\mathrm{D}}
+\newcommand{\dv}{\mathrm{div\,}}
+\newcommand{\Lap}{\mathrm{\Delta}}
+\newcommand{\Hd}{\dot H}
+\newcommand{\eqnb}{\begin{equation}}
+\newcommand{\eqnbs}{\begin{equation*}}
+\newcommand{\eqnbsa}{\begin{equation*}\begin{aligned}}
+\newcommand{\eqnba}{\begin{equation}\begin{aligned}}
+\newcommand{\eqnbl}[1]{\begin{equation}\label{#1}}
+\newcommand{\eqnbal}[1]{\begin{equation}\label{#1}\begin{aligned}}
+\newcommand{\eqnes}{\end{equation*}}
+\newcommand{\eqne}{\end{equation}}
+\newcommand{\eqnesa}{\end{aligned}\end{equation*}}
+\newcommand{\eqnea}{\end{aligned}\end{equation}}
+\newcommand{\loc}{\mathrm{loc}}
+\newcommand{\re}[1]{(\ref{#1})}
+\newcommand{\oneChar}{\hspace{11pt}}%insert space of width equivalent to one character 
+\newcommand{\comment}[1]{}
+
+%BB and mathcal letters
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\CC}{\mathbb{C}}
+\renewcommand{\SS}{\mathbb{S}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ka}{\mathfrak{a}}
+\newcommand{\kA}{\mathfrak{A}}
+
+
+%Theorems
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}%[section]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}%[section]
+\newtheorem{corollary}[theorem]{Corollary}%[section]
+\newtheorem{apxlem}{Lemma}[section]{\bf}{\it}
+
+%\newcommand{\Method}[4]{{\tt #1}&\makecell[l{p{5cm}}]{{\bf Args: }#2\\{\bf Desc: }#3\\{\bf Return: }#4}}
+
+%method specification as item in description environment
+\newcommand{\MethodItem}[4]{\item[{\tt #1}]{\bf Args: }#2\\{\bf Desc: }#3\\{\bf Return: }#4}
+%Argument description formatting to use in argument 2 of \MethodItem
+\newcommand{\MethodArg}[2]{{\it #1} - #2}
+
+%attribute specification as item in description environment
+\newcommand{\AttrItem}[2]{\item[{\tt #1}] - #2}
+
+\title{CoNxNect API v0.1}
+\author{HappyGnome}
+\date{March 2019}
+\begin{document}
+\maketitle
+\tableofcontents
+%######################################
+\section{Introduction}
+TODO
+%######################################
+\section{AI Player Library}
+\subsection{Overview}
+A player library defines an ai player class, a player factory class, and a module file which is used to load the rest. For definiteness, we will call these {\tt aiPlayer}, {\tt aiFactory} and {\tt aiModule} (i.e.\ in the file {\tt aiModule.py}), although any names may be used. In order that the library can be found by CoNxNect, {\tt aiModule.py} should be placed in {\tt <CoNxNect\_root>/AI\_Players}. Any additional files should be placed in {\tt <CoNxNect\_root>/AI\_Players/<aiModule>/}
+\subsection{\tt aiModule}
+An AI player module, must implement the following in global scope:
+\begin{description}
+\MethodItem{getFactory()}{None}{}{An instance of {\tt aiFactory}. This may be static within the module. It will only be used in the calling thread.}
+\end{description}
+%************************************
+\subsection{{\tt aiPlayer} Reference}
+%The {\tt aiPlayer} should inherit from {\tt conxnect.aiPlayer\_base}. {\tt conxnect.aiPlayer\_base} has the following 
+
+The following methods should be implemented:
+\begin{description}
+%\MethodItem{\_\_init\_\_(self,spec, playerTurn)}{\MethodArg{spec}{an instance of gameSpec, defining the grid size, player count and victory conditions.}\\ }{spec and playerTurn should be passed to {\tt super.\_\_init\_\_}}{The column in which this player plays next.}
+\MethodItem{makeMove(self)}{self}{The player will not be notified of its own moves, and so should update itself accordingly.}{Index of the column in which this player plays next.}
+\MethodItem{notifyMove(self, playerTurn, column)}{\MethodArg{playerTurn}{the turn position of the player making the move.}\\\MethodArg{column}{the column in which the player played}}{Called each time another player makes a move.}{None}
+\MethodItem{beginGame(self, playerTurn)}{\MethodArg{playerTurn}{the position of this player in turn order (1= first,\ldots)}}{Initialise resources, threads etc.\ when this is called.}{None}
+\MethodItem{endGame(self)}{self}{Free resources, threads etc.\ that were created at {\tt beginGame}.}{None}
+\end{description}
+
+\subsection{{\tt aiFactory} Reference}
+The following methods should be implemented:
+\begin{description}
+%\MethodItem{\_\_init\_\_(self,spec, playerTurn)}{\MethodArg{spec}{an instance of gameSpec, defining the grid size, player count and victory conditions.}\\ }{spec and playerTurn should be passed to {\tt super.\_\_init\_\_}}{The column in which this player plays next.}
+\MethodItem{newPlayer(self, spec, allowed\_depth)}{\MethodArg{spec}{an instance of gameSpec, defining the grid size, player count and victory conditions.}\\\MethodArg{allowed\_depth}{A complexity hint. The returned player should compute at most this many levels in the decision tree.}}{Generate a new instance of {\tt aiPlayer} based on the game specification.}{The new {\tt aiPlayer} instance.}
+\MethodItem{newPlayers(self, spec, allowed\_depth, n)}{\MethodArg{spec}{an instance of gameSpec}\\\MethodArg{allowed\_depth}{A complexity hint. The returned player should compute at most this many levels in the decision tree.}\\\MethodArg{n}{the number of players to generate}}{Generate {\tt n} new {\tt aiPlayer} instances, based on {\tt spec} and the current factory config.}{A list containing the new {\tt aiPlayer} instances.}
+
+\MethodItem{loadDefaultConfig(self)}{self}{Load the default config/training data for this factory. This will be called before players are generated.}{None}
+\MethodItem{updateConfig(self, player\_rank)}{\MethodArg{player\_rank}{A list of ordered pairs {\tt(player, score)}. Each {\tt player} is an instance generated by this factory, and {\tt score} is the corresponding rating (higher is better), calculated from playing several games.}}{Update the parameters of the factory when generating new players. This routine may or may not save the new config/ learning data.}{None}
+\MethodItem{saveConfig(self)}{self}{Save any config/learning data, as necessary. This may be called, for example before Default config is reloaded, or the program is closed.}{None}
+\end{description}
+%######################################
+\section{Structures}
+\subsection{\tt gameSpec}
+Public attributes:
+\begin{description}
+\AttrItem{rows}{Number of rows in the grid.}
+\AttrItem{cols}{Number of columns in the grid.}
+\AttrItem{playerCount}{Number of players in the game.}
+\AttrItem{victoryN}{Length of streak required for victory.}
+\end{description}
+%**********************************
+%######################################
+\bibliographystyle{plain}%nat}%authordate1}
+\bibliography{../Bib1}{}
+\end{document}

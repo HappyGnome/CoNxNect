@@ -1,0 +1,5 @@
+API_docs/*.aux
+API_docs/*.out
+API_docs/*.toc
+API_docs/*.log
+API_docs/*.gz
