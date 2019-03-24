@@ -108,34 +108,39 @@ TODO
 %######################################
 \section{AI Player Library}
 \subsection{Overview}
-A player library defines an ai player class, a player factory class, and a module file which is used to load the rest. For definiteness, we will call these {\tt aiPlayer}, {\tt aiFactory} and {\tt aiModule} (i.e.\ in the file {\tt aiModule.py}), although any names may be used. In order that the library can be found by CoNxNect, {\tt aiModule.py} should be placed in {\tt <CoNxNect\_root>/AI\_Players}. Any additional files should be placed in {\tt <CoNxNect\_root>/AI\_Players/<aiModule>/}
-\subsection{\tt aiModule}
-An AI player module, must implement the following in global scope:
-\begin{description}
-\MethodItem{getFactory()}{None}{}{An instance of {\tt aiFactory}. This may be static within the module. It will only be used in the calling thread.}
-\end{description}
+A player package defines an ai player class, a player factory class. For definiteness, we will call the package {\tt aiPackage} %(i.e.\ in the files {\tt PlayerModules/<aiPackage>/player.py}, {\tt PlayerModules/aiPackage/factory.py}, and {\tt PlayerModules/aiPackage/\_\_init\_\_.py}), although any names may be used.
+ In order that the package can be found by CoNxNect, {\tt /<aiPackage>/\_\_init.py\_\_} should be a subdirectory of in {\tt <CoNxNect\_root>/PlayerModules}. 
+\subsection{\tt aiPackage}
+A player package in the directory {\tt PlayerModules/<aiPackage>/}. This directory should contain {\tt \_\_init\_\_.py}, {\tt factory.py} and {\tt player.py}.
+%\begin{description}
+%\MethodItem{getFactory()}{None}{}{An instance of {\tt factory}. This may be static within the module.}
+%\end{description}
 %************************************
-\subsection{{\tt aiPlayer} Reference}
-%The {\tt aiPlayer} should inherit from {\tt conxnect.aiPlayer\_base}. {\tt conxnect.aiPlayer\_base} has the following 
+\subsection{{\tt player} Reference}
+%The {\tt player} should inherit from {\tt conxnect.player\_base}. {\tt conxnect.player\_base} has the following 
+A class defined in {\tt <aiPackage>/player.py}.
 
-The following methods should be implemented:
+{\tt player} should implemented the following methods:
 \begin{description}
 %\MethodItem{\_\_init\_\_(self,spec, playerTurn)}{\MethodArg{spec}{an instance of gameSpec, defining the grid size, player count and victory conditions.}\\ }{spec and playerTurn should be passed to {\tt super.\_\_init\_\_}}{The column in which this player plays next.}
 \MethodItem{makeMove(self)}{self}{The player will not be notified of its own moves, and so should update itself accordingly.}{Index of the column in which this player plays next.}
 \MethodItem{notifyMove(self, playerTurn, column)}{\MethodArg{playerTurn}{the turn position of the player making the move.}\\\MethodArg{column}{the column in which the player played}}{Called each time another player makes a move.}{None}
 \MethodItem{beginGame(self, playerTurn)}{\MethodArg{playerTurn}{the position of this player in turn order (1= first,\ldots)}}{Initialise resources, threads etc.\ when this is called.}{None}
-\MethodItem{endGame(self)}{self}{Free resources, threads etc.\ that were created at {\tt beginGame}.}{None}
+\MethodItem{endGame(self, winner)}{\MethodArg{winner}{Turn position of the winning player, 0 for a draw or -1 for game ended early.}}{Free resources, threads etc.\ that were created at {\tt beginGame}. This is also the place to log results of the game.}{None}
+\MethodItem{getFactory(self)}{self}{}{The factory that generated this player.}
 \end{description}
 
-\subsection{{\tt aiFactory} Reference}
-The following methods should be implemented:
+\subsection{{\tt factory} Reference}
+A class defined in {\tt <aiPackage>/factory.py}.
+
+The methods below should be implemented. It must be safe to call any of them from any thread.
 \begin{description}
 %\MethodItem{\_\_init\_\_(self,spec, playerTurn)}{\MethodArg{spec}{an instance of gameSpec, defining the grid size, player count and victory conditions.}\\ }{spec and playerTurn should be passed to {\tt super.\_\_init\_\_}}{The column in which this player plays next.}
-\MethodItem{newPlayer(self, spec, allowed\_depth)}{\MethodArg{spec}{an instance of gameSpec, defining the grid size, player count and victory conditions.}\\\MethodArg{allowed\_depth}{A complexity hint. The returned player should compute at most this many levels in the decision tree.}}{Generate a new instance of {\tt aiPlayer} based on the game specification.}{The new {\tt aiPlayer} instance.}
-\MethodItem{newPlayers(self, spec, allowed\_depth, n)}{\MethodArg{spec}{an instance of gameSpec}\\\MethodArg{allowed\_depth}{A complexity hint. The returned player should compute at most this many levels in the decision tree.}\\\MethodArg{n}{the number of players to generate}}{Generate {\tt n} new {\tt aiPlayer} instances, based on {\tt spec} and the current factory config.}{A list containing the new {\tt aiPlayer} instances.}
+\MethodItem{newPlayer(self, spec, allowed\_depth)}{\MethodArg{spec}{an instance of gameSpec, defining the grid size, player count and victory conditions.}\\\MethodArg{allowed\_depth}{A complexity hint. The returned player should compute at most this many levels in the decision tree.}}{Generate a new instance of {\tt player} based on the game specification.}{The new {\tt player} instance.}
+\MethodItem{newPlayers(self, spec, allowed\_depth, n)}{\MethodArg{spec}{an instance of gameSpec}\\\MethodArg{allowed\_depth}{A complexity hint. The returned player should compute at most this many levels in the decision tree.}\\\MethodArg{n}{the number of players to generate}}{Generate {\tt n} new {\tt player} instances, based on {\tt spec} and the current factory config.}{A list containing the new {\tt player} instances.}
 
 \MethodItem{loadDefaultConfig(self)}{self}{Load the default config/training data for this factory. This will be called before players are generated.}{None}
-\MethodItem{updateConfig(self, player\_rank)}{\MethodArg{player\_rank}{A list of ordered pairs {\tt(player, score)}. Each {\tt player} is an instance generated by this factory, and {\tt score} is the corresponding rating (higher is better), calculated from playing several games.}}{Update the parameters of the factory when generating new players. This routine may or may not save the new config/ learning data.}{None}
+\MethodItem{debriefPlayer(self, player)}{\MethodArg{player}{A player previously generated by this factory.}}{Update the parameters of the factory for generating new players, based on the experience of passed player. This routine may or may not save the new config/ learning data.}{None}
 \MethodItem{saveConfig(self)}{self}{Save any config/learning data, as necessary. This may be called, for example before Default config is reloaded, or the program is closed.}{None}
 \end{description}
 %######################################

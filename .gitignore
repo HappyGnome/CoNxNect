@@ -3,3 +3,7 @@ API_docs/*.out
 API_docs/*.toc
 API_docs/*.log
 API_docs/*.gz
+.spyproject
+__pycache__
+PlayerModules/**/__pycache__
+
